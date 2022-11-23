@@ -1,0 +1,122 @@
+[
+    {
+        "topic":"World cup 2022",
+        "lich_thi_dau":[
+            {
+                "type":1,
+                "url":"https://www.24h.com.vn/bong-da/lich-thi-dau-bong-da-world-cup-2022-c48a1369008.html",
+                "type_crawl":1,
+                "box_round":{
+                    "type_result":0,
+                    "xpath":"//article[contains(@class, 'wc22')]",
+                    "level":1
+                },
+                "round_name":{
+                    "type_result":1,
+                    "xpath":".//*[@class = 'tuht_show']",
+                    "level":1
+                },
+                "box_match":{
+                    "type_result":0,
+                    "xpath":".//*[contains(@class, 'box-items')]",
+                    "level":2
+                },
+                "team":{
+                    "type_result":2,
+                    "xpath": ".//*[contains(@class , 'team-name')]/text()",
+                    "level":3
+                },
+                "score":{
+                    "type_result":2,
+                    "xpath": ".//*[@class = 'box-score']/text()",
+                    "level":3
+                },
+                "time":{
+                    "type_result":1,
+                    "xpath":".//*[@class = 'box-time']",
+                    "level":3,
+                    "time_format":"days/months hours:minutes",
+                    "replace":"years=2022"
+                },
+                "group":{
+                    "type_result":1,
+                    "xpath":".//*[contains(@class, 'box-table')]",
+                    "level":3
+                }
+            }
+        ],
+        "bang_xep_hang":[
+            {
+                "type":2,
+                "url":"https://www.24h.com.vn/bong-da/bang-xep-hang-bong-da-world-cup-2022-c48a1369009.html",
+                "type_crawl":1,
+                "box_group":{
+                    "type_result":0,
+                    "xpath":"//*[contains(@class, 'wc22-bxh-bv-box')]",
+                    "level":1
+                },
+                "group_name":{
+                    "type_result":1,
+                    "xpath":".//*[contains(@class, 'tuht_show')]",
+                    "level":2
+                },
+                "box_team":{
+                    "type_result":0,
+                    "xpath": ".//tbody/tr",
+                    "level":2
+                },
+                "team_name":{
+                    "type_result":1,
+                    "xpath": ".//td[2]",
+                    "level":3
+                },
+                "rank":{
+                    "type_result":1,
+                    "xpath":".//td[1]",
+                    "level":3
+                },
+                "matches_played":{
+                    "type_result":1,
+                    "xpath":".//td[3]",
+                    "level":3
+                },
+                "wins":{
+                    "type_result":1,
+                    "xpath":".//td[4]",
+                    "level":3
+                },
+                "draws":{
+                    "type_result":1,
+                    "xpath":".//td[5]",
+                    "level":3
+                },
+                "losses":{
+                    "type_result":1,
+                    "xpath":".//td[6]",
+                    "level":3
+                },
+                "goals":{
+                    "type_result":1,
+                    "xpath":".//td[7]",
+                    "level":3
+                },
+                "goals_conceded":{
+                    "type_result":1,
+                    "xpath":".//td[8]",
+                    "level":3
+                },
+                "win_lose_difference":{
+                    "type_result":1, 
+                    "xpath":".//td[9]",
+                    "level":3
+                },
+                "points":{
+                    "type_result":1,
+                    "xpath":".//td[10]",
+                    "level":3
+                }
+
+            }
+        ]
+    }
+]

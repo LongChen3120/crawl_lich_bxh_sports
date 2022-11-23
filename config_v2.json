@@ -1,0 +1,124 @@
+[
+    {
+        "topic":"World cup 2022",
+        "lich_thi_dau":[
+            {
+                "type":1,
+                "url":"https://www.24h.com.vn/bong-da/lich-thi-dau-bong-da-world-cup-2022-c48a1369008.html",
+                "type_crawl":1,
+                "table":{
+                    "type_result":0,
+                    "xpath":"//article[contains(@class, 'wc22')]",
+                    "name_table":{
+                        "type_result":1,
+                        "xpath":".//*[@class = 'tuht_show']"
+                    },
+                    "row":{
+                        "type_result":0,
+                        "xpath":".//*[contains(@class, 'box-items')]"
+                    },
+                    "column":[
+                        {
+                            "name_column":"score_team",
+                            "type_result":4,
+                            "xpath": ".//*[@class = 'box-score']/child::*/text()"
+                        },
+                        {
+                            "name_column":"group",
+                            "type_result":1,
+                            "xpath":".//*[contains(@class, 'box-table')]"
+                        },
+                        {
+                            "name_column":"time",
+                            "type_result":1,
+                            "xpath":".//*[@class = 'box-time']",
+                            "time_format":"days/months hours:minutes",
+                            "replace":"years=2022"
+                        },
+                        {
+                            "name_column":"team",
+                            "type_result":2,
+                            "xpath":".//*[contains(@class , 'team-name')]/text()"
+                        }
+                    ]
+                }
+            }
+        ],
+        "bang_xep_hang":[
+            {
+                "type":2,
+                "url":"https://www.24h.com.vn/bong-da/bang-xep-hang-bong-da-world-cup-2022-c48a1369009.html",
+                "type_crawl":1,
+                "publish_date":{
+                    "type_result":1,
+                    "xpath":"//*[contains(@class, 'cre-post')]",
+                    "time_format":"string days/months/years hours:minutes string"
+                },
+                "table":{
+                    "type_result":0,
+                    "xpath":"//*[contains(@class, 'wc22-bxh-bv-box')]",
+                    "name_table":{
+                        "type_result":1,
+                        "xpath":".//*[contains(@class, 'tuht_show')]"
+                    },
+                    "row":{
+                        "type_result":0,
+                        "xpath": ".//tbody/tr"
+                    },
+                    "column":[
+                        {
+                            "name_column":"team",
+                            "type_result":1,
+                            "xpath":".//td[2]"
+                        },
+                        {
+                            "type_result":3,
+                            "xpath":".//td[1]",
+                            "name_column":"rank"
+                        },
+                        {
+                            "type_result":3,
+                            "xpath":".//td[3]",
+                            "name_column":"matches_played"
+                        },
+                        {
+                            "type_result":3,
+                            "xpath":".//td[4]",
+                            "name_column":"wins"
+                        },
+                        {
+                            "type_result":3,
+                            "xpath":".//td[5]",
+                            "name_column":"draws"
+                        },
+                        {
+                            "type_result":3,
+                            "xpath":".//td[6]",
+                            "name_column":"losses"
+                        },
+                        {
+                            "type_result":3,
+                            "xpath":".//td[7]",
+                            "name_column":"goals"
+                        },
+                        {
+                            "type_result":3,
+                            "xpath":".//td[8]",
+                            "name_column":"goals_conceded"
+                        },
+                        {
+                            "type_result":3, 
+                            "xpath":".//td[9]",
+                            "name_column":"win_lose_difference"
+                        },
+                        {
+                            "type_result":3,
+                            "xpath":".//td[10]",
+                            "name_column":"points"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+]

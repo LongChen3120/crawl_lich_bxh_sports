@@ -1,0 +1,168 @@
+[
+    {
+        "lich_thi_dau":[
+            {
+                "topic":"World cup 2022",
+                "type":2,
+                "url":"https://www.24h.com.vn/vck-world-cup-2022/ket-qua-thi-dau-bong-da-world-cup-2022-c860a1369011.html",
+                "type_crawl":1,
+                "publish_date":{
+                    "type_result":5,
+                    "xpath":"//time[contains(@class, 'cre-post')]",
+                    "re":"(\\d+\\S+\\s+\\d+\\S+)",
+                    "time_format":"days/months/years hours:minutes"
+                },
+                "table":{
+                    "type_result":0,
+                    "xpath":"//article[contains(@class, 'wc22')]",
+                    "round":{
+                        "type_result":1,
+                        "xpath":".//*[@class = 'tuht_show']"
+                    },
+                    "row":{
+                        "type_result":0,
+                        "xpath":".//*[contains(@class, 'box-items')]"
+                    },
+                    "column":{
+                        "score_team":{
+                                "type_result":4,
+                                "xpath": ".//*[@class = 'box-score']/child::*/text()"
+                            },
+                        "group":{
+                            "type_result":1,
+                            "xpath":".//*[contains(@class, 'box-table')]"
+                            },
+                        "time":{
+                            "type_result":5,
+                            "xpath":".//*[@class = 'box-time']",
+                            "time_format":"days/months hours:minutes",
+                            "replace":"years=2022"
+                            },
+                        "team":{
+                            "type_result":2,
+                            "xpath":".//*[contains(@class , 'team-name')]/text()"
+                            }
+                    }
+                },
+                "data_sample":{
+                    "topic": "lich_thi_dau",
+                    "type": "lich_thi_dau",
+                    "create_date": "",
+                    "publish_date": "lich_thi_dau",
+                    "round": "table",
+                    "score_team": "column",
+                    "group": "column",
+                    "time": "column",
+                    "team": "column",
+                    "url": "lich_thi_dau",
+                    "keyword": [
+                        "topic",
+                        "Lịch thi đấu World Cup 2022",
+                        "round",
+                        "group",
+                        "team_0",
+                        "team_1"
+                    ],
+                    "keyword_unsign": "",
+                    "domain": "https://www.24h.com.vn/",
+                    "thread": ""
+                }
+            }
+        ],
+        "bang_xep_hang":[
+            {
+                "topic":"World cup 2022",
+                "type":5,
+                "url":"https://www.24h.com.vn/bong-da/bang-xep-hang-bong-da-world-cup-2022-c48a1369009.html",
+                "type_crawl":1,
+                "publish_date":{
+                    "type_result":5,
+                    "xpath":"//time[contains(@class, 'cre-post')]",
+                    "re":"(\\d+\\S+\\s+\\d+\\S+)",
+                    "time_format":"days/months/years hours:minutes"
+                },
+                "table":{
+                    "type_result":0,
+                    "xpath":"//*[contains(@class, 'wc22-bxh-bv-box')]",
+                    "group":{
+                        "type_result":1,
+                        "xpath":".//*[contains(@class, 'tuht_show')]"
+                    },
+                    "row":{
+                        "type_result":0,
+                        "xpath": ".//tbody/tr"
+                    },
+                    "column":{
+                        "team":{
+                            "type_result":1,
+                            "xpath":".//td[2]"
+                        },
+                        "rank":{
+                            "type_result":3,
+                            "xpath":".//td[1]"
+                        },
+                        "matches_played":{
+                            "type_result":3,
+                            "xpath":".//td[3]"
+                        },
+                        "wins":{
+                            "type_result":3,
+                            "xpath":".//td[4]"
+                        },
+                        "draws":{
+                            "type_result":3,
+                            "xpath":".//td[5]"
+                        },
+                        "losses":{
+                            "type_result":3,
+                            "xpath":".//td[6]"
+                        },
+                        "goals":{
+                            "type_result":3,
+                            "xpath":".//td[7]"
+                        },
+                        "goals_conceded":{
+                            "type_result":3,
+                            "xpath":".//td[8]"
+                        },
+                        "win_lose_difference":{
+                            "type_result":3, 
+                            "xpath":".//td[9]"
+                        },
+                        "points":{
+                            "type_result":3,
+                            "xpath":".//td[10]"
+                        }
+                    }
+                },
+                "data_sample":{
+                    "topic": "bang_xep_hang",
+                    "type": "bang_xep_hang",
+                    "group": "table",
+                    "team": "column",
+                    "rank": "column",
+                    "matches_played": "column",
+                    "wins": "column",
+                    "draws": "column",
+                    "losses": "column",
+                    "goals": "column",
+                    "goals_conceded": "column",
+                    "win_lose_difference": "column",
+                    "points": "column",
+                    "url": "bang_xep_hang",
+                    "keyword": [
+                        "topic",
+                        "Bảng xếp hạng world cup 2022",
+                        "group",
+                        "team"
+                    ],
+                    "keyword_unsign": "",
+                    "create_date": "",
+                    "publish_date": "bang_xep_hang",
+                    "domain": "https://www.24h.com.vn/",
+                    "thread": ""
+                }
+            }
+        ]
+    }
+]

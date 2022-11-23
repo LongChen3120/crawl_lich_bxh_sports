@@ -1,0 +1,182 @@
+[
+    {
+        "id": 0,
+        "type_crawl":2,
+        "website":"https://www.flashscore.vn/", 
+        "sport":"Bóng đá",
+        "step_get_link_league":["send_request", "accept_cookies", "find_my_league", "show_more_country", "show_league_VN", "find_VN_league"],
+        "step_get_detail":["send_request", "accept_cookies", "show_results", "show_more_content", "craw_detail", "show_fixtures", "show_more_content", "crawl_detail"],
+        "accept_cookies":{
+            "type_action":1,
+            "xpath":"//*[contains(@id, 'onetrust-accept-btn-handler')]"
+        },
+        "find_my_league":{
+            "type_action":2,
+            "xpath":"//*[@class = 'leftMenu__href']",
+            "attribute":"href",
+            "time_sleep":1
+        },
+        "show_more_country":{
+            "type_action":1,
+            "xpath":"//*[contains(@class, 'lmc__itemMore')]/*",
+            "time_sleep":1
+        },
+        "show_league_VN":{
+            "type_action":1,
+            "xpath":"//*[@class = 'lmc__elementName'][contains(text(), 'Việt Nam')]"
+        },
+        "find_VN_league":{
+            "type_action":2,
+            "xpath":"//*[@class = 'lmc__template ']//a",
+            "attribute":"href",
+            "time_sleep":1
+        },
+        "send_request":{
+
+        },
+        "show_fixtures":{
+            "type_action":1,
+            "type_find":1,
+            "xpath":"//*[@id = 'li2']",
+            "time_sleep":3
+        },
+        "show_more_content":{
+            "type_action":1,
+            "xpath":"//*[contains(@class, 'event__more')]",
+            "time_sleep":1
+        },
+        "crawl_detail":{
+            "round":"//*[contains(@class, 'event__round')]",
+            "league_name":"//*[@class = 'heading__name']",
+            "season":"//*[@class = 'heading__info']",
+            "box_match":"//*[contains(@class, 'event__match')]",
+            "team":"//*[contains(@class, 'event__participant')]",
+            "time":"//*[contains(@class, 'event__time')]",
+            "score_team_1":"//*[contains(@class, 'score--home')]",
+            "score_team_2":"//*[contains(@class, 'score--away')]",
+            "time_sleep":3
+        },
+        "show_results":{
+            "type_action":1,
+            "type_find":1,
+            "xpath":"//*[@id = 'li1']",
+            "time_sleep":3
+        }
+    },
+    {
+        "id":1,
+        "type_crawl":2,
+        "website":"https://www.flashscore.vn/bong-chuyen/", 
+        "sport":"Bóng chuyền",
+        "step_get_link_league":["send_request", "accept_cookies", "find_my_league"],
+        "step_get_detail":["send_request", "accept_cookies", "show_results", "show_more_content", "craw_detail", "show_fixtures", "show_more_content", "crawl_detail"],
+        "accept_cookies":{
+            "type_action":1,
+            "xpath":"//*[contains(@id, 'onetrust-accept-btn-handler')]"
+        },
+        "find_my_league":{
+            "type_action":2,
+            "xpath":"//*[@class = 'leftMenu__item']//a",
+            "attribute":"href",
+            "time_sleep":1
+        },
+        
+        "send_request":{
+
+        },
+        "show_fixtures":{
+            "type_action":1,
+            "type_find":1,
+            "xpath":"//*[@id = 'li2']",
+            "time_sleep":3
+        },
+        "show_more_content":{
+            "type_action":1,
+            "xpath":"//*[contains(@class, 'event__more')]",
+            "time_sleep":1
+        },
+        "crawl_detail":{
+            "league_name":"//*[@class = 'heading__name']",
+            "season":"//*[@class = 'heading__info']",
+            "box_match":"//*[contains(@class, 'event__match')]",
+            "team":"//*[contains(@class, 'event__participant')]",
+            "time":"//*[contains(@class, 'event__time')]",
+            "score_team_1":"//*[contains(@class, 'score--home')]",
+            "score_team_2":"//*[contains(@class, 'score--away')]",
+            "time_sleep":5
+        },
+        "show_results":{
+            "type_action":1,
+            "type_find":1,
+            "xpath":"//*[@id = 'li1']",
+            "time_sleep":3
+        }
+    },
+
+    {
+        "id":3,
+        "event":"world cup 2022",
+        "lich_thi_dau":{
+            "urls":{
+                "type_crawl":2,
+                "url":"https://www.google.com/search?q=world+cup+2022&oq=world+cup+2022&aqs=edge..69i57.6390j0j9&sourceid=chrome&ie=UTF-8#sie=lg;/m/0fp_8fm;2;/m/030q7;mt;fp;1;;;"
+            }
+        },
+        "tin_lien_quan":{
+            "urls":[
+
+            ]
+        },
+        "step_get_detail":["send_request", "scroll_down_to_the_end", "craw_detail"],
+        "send_request":{
+            "type_crawl":2,
+            "url":"https://www.google.com/search?q=world+cup+2022&oq=world+cup+2022&aqs=edge..69i57.6390j0j9&sourceid=chrome&ie=UTF-8#sie=lg;/m/0fp_8fm;2;/m/030q7;mt;fp;1;;;"
+        },
+        "scroll_down_to_the_end":{},
+        "crawl_detail":{
+            "box_round":{
+                "xpath":"//*[@class = 'OcbAbf']",
+                "title_round":"//*[@class = 'GVj7ae imso-medium-font qJnhT imso-ani']",
+                "box_match":{
+                    "xpath":".//table[@class = 'KAIX8d']",
+                    "teams":".//*[@class = 'ellipsisize']/div",
+                    "scores":".//*[@class = 'imspo_mt__tt-w']",
+                    "time":".//*[@class = 'imspo_mt__ns-pm-s']",
+                    "status":""
+                }
+            }
+        }
+    },
+
+    {
+        "id":3,
+        "event":"world cup 2022",
+        "lich_thi_dau":{
+            "urls":{
+                "type_crawl":2,
+                "url":"https://www.google.com/search?q=world+cup+2022&oq=world+cup+2022&aqs=edge..69i57.6390j0j9&sourceid=chrome&ie=UTF-8#sie=lg;/m/0fp_8fm;2;/m/030q7;mt;fp;1;;;"
+            }
+        },
+        "tin_lien_quan":{
+            "urls":[
+
+            ]
+        },
+        "step_get_detail":["send_request", "click_show_lich_thi_dau", "craw_detail"],
+        "send_request":{
+            "type_crawl":2,
+            "url":"https://www.flashscore.vn/bong-da/world/world-cup/"
+        },
+        "scroll_down_to_the_end":{},
+        "crawl_detail":{
+            "title_round":"//*[contains(@class, 'event__round')]",
+            "box_match":{
+                "xpath":"//*[contains(@class, 'event__match')]",
+                "teams":".//*[contains(@class, 'event__participant')]",
+                "scores":".//*[contains(@class, 'event__score')]",
+                "time":".//*[contains(@class, 'event__time')]",
+                "status":""
+            }
+        }
+    }
+]
