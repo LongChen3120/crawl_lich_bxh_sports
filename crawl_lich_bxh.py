@@ -17,7 +17,7 @@ def crawl_table(config):
     lich_thi_dau = []
     url = config['url']
     browser = detect_type_crawl(config, url)
-    # with open('D:\congTacVienVCC\crawl_sports\Lịch thi đấu World Cup 2022_1.html', 'r', encoding='utf-8') as read_html:
+    # with open('D:\congTacVienVCC\crawl_sports\lich.html', 'r', encoding='utf-8') as read_html:
     #     browser = read_html.read()
     #     browser = html.fromstring(browser, 'lxml')
     list_table = detect_type_result(browser, config['table'])
@@ -145,48 +145,20 @@ def detect_time_format(time, config):
     return time
 
 
-def main(index_es):
-    lich_thi_dau, bang_xep_hang = query.connect_DB_local()
-    es = query.connect_ES()
-    ## update_from_web___
-    for league in data_config:
-        for config_lich_thi_dau in league['lich_thi_dau']:
-            list_data = crawl_table(config_lich_thi_dau)
-            check_update_lich = query.update_lich_ES(es, index_es, list_data)
-        for bxh in league['bang_xep_hang']:
-            list_data = crawl_table(bxh)
-            check_update_bxh = query.update_bxh_ES(es, "test_update_bxh", list_data)
-    return check_update_lich, check_update_bxh
-
-# main("test_insert_es")
-
-# if __name__ == '__main__':
-#     lich_thi_dau, bang_xep_hang = query.connect_DB_local()
-#     es = query.connect_ES()
-
-#     ## update_from_DB___
-#     list_data = []
-#     for i in lich_thi_dau.find({}):
-#         del i['_id']
-#         list_data.append(i)
-#     query.update_lich_ES(es, "test_insert_es", list_data)
-
-#     # list_data = []
-#     # for i in bang_xep_hang.find({}):
-#     #     del i['_id']
-#     #     list_data.append(i)
-#     # query.update_bxh_ES(es, "test_update_bxh", list_data)
+def main(type, es, index_es, config, id_match_need_update):
+    list_data = crawl_table(config)
+    if type == 2:
+        check_update = query.update_lich_ES(es, index_es, list_data, id_match_need_update)
+    elif type == 5:
+        check_update = query.update_bxh_ES(es, index_es, list_data)
+    return check_update
 
 
-
-#     ## update_from_web___
-#     # for league in data_config:
-#     #     for config_lich_thi_dau in league['lich_thi_dau']:
-#     #         list_data = crawl_table(config_lich_thi_dau)
-#     #         # query.update_lich_DB(lich_thi_dau, list_data)
-#     #         query.insert_ES(es, "test_insert_es", list_data)
-#     #     # for bxh in league['bang_xep_hang']:
-#     #     #     query.update_bxh_DB(bang_xep_hang, crawl_table(bxh))
-
-
-    
+# wc, col_config = query.connect_DB_local()
+# list_config = col_config.find({})
+# config = list_config[0]['lich_thi_dau'][0]
+# es = query.connect_ES()
+# index_es = "test_insert_es"
+# list_data = crawl_table(config)
+# id_match_need_update = "abc"
+# check_update = query.update_lich_ES(es, index_es, list_data, id_match_need_update)
