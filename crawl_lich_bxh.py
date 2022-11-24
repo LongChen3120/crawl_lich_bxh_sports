@@ -145,20 +145,28 @@ def detect_time_format(time, config):
     return time
 
 
-def main(type, es, index_es, config, id_match_need_update):
+def main(type, es, index_es, config):
     list_data = crawl_table(config)
     if type == 2:
-        check_update = query.update_lich_ES(es, index_es, list_data, id_match_need_update)
+        check_update = query.update_lich_ES(es, index_es, list_data)
     elif type == 5:
         check_update = query.update_bxh_ES(es, index_es, list_data)
     return check_update
 
 
-# wc, col_config = query.connect_DB_local()
+# wc, col_config = query.connect_DB_aHuy()
 # list_config = col_config.find({})
 # config = list_config[0]['lich_thi_dau'][0]
 # es = query.connect_ES()
-# index_es = "test_insert_es"
+# index_es = "worldcup"
 # list_data = crawl_table(config)
-# id_match_need_update = "abc"
-# check_update = query.update_lich_ES(es, index_es, list_data, id_match_need_update)
+# check_update = query.update_lich_ES(es, index_es, list_data)
+
+# wc, col_config = query.connect_DB_aHuy()
+# list_config = col_config.find({})
+# config = list_config[0]['bang_xep_hang'][0]
+# es = query.connect_ES()
+# index_es = "worldcup"
+# list_data = crawl_table(config)
+# check_update = query.update_bxh_ES(es, index_es, list_data)
+# print(check_update)

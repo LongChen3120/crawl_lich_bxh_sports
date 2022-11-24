@@ -69,7 +69,7 @@ def update_bxh_DB(col, list_data):
 # a hoat: http://192.168.19.77:9200/
 # server: http://10.3.11.253:3008
 def connect_ES():
-    es = Elasticsearch(hosts="http://127.0.0.1:9200/")
+    es = Elasticsearch(hosts="http://192.168.19.77:9200/")
     return es
 
 
@@ -78,65 +78,62 @@ def insert_ES(es, es_index, list_data):
         es.index(index=es_index, body=match)
 
 
-def update_lich_ES(es, es_index, list_data, id_match_need_update):    
+def update_lich_ES(es, es_index, list_data):    
     check_update = False
-    match_need_update = es.get(index=es_index, id=id_match_need_update)['_source']
     for match in list_data:
-        if match['team_0'] == match_need_update['team_0'] and match['team_1'] == match_need_update['team_1']:
+        query = {
+            "query": {
+                "bool": {
+                    "must":[
+                        {
+                            "match":{
+                                "type":match['type']
+                            }
+                        },
+                        {
+                            "match":{
+                                "team_0":{
+                                    "query":match['team_0'],
+                                    "operator" : "AND"
+                                }
+                            }
+                        },
+                        {
+                            "match":{
+                                "team_1":{
+                                    "query":match['team_1'],
+                                    "operator" : "AND"
+                                }
+                            }
+                        },
+                        {
+                            "match":{
+                                "time":match['time']
+                            }
+                        },
+                        {
+                            "match":{
+                                "domain":match['domain']
+                            }
+                        }
+                    ]
+                }
+            }            
+        }
+        result =  es.search(index=es_index, body=query)
+        if result['hits']['total']['value'] == 1:
             del match['create_date']
-            match['last_update'] = datetime.datetime.now()
+            id_match = result['hits']['hits'][0]['_id']
             query_update = {
                 "doc":match
             }
-            response = es.update(index=es_index, id=id_match_need_update, body=query_update)
+            response = es.update(index=es_index, id=id_match, body=query_update)
             if response['result'] == "updated":
-                logging.info(f"update lich ok, match_new:{match}")
+                logging.warning(f"update lich ok, id:{id_match}")
                 check_update = True
-                break
         else:
-            query = {
-                "query": {
-                    "bool": {
-                        "must":[
-                            {
-                                "match":{
-                                    "type":match['type']
-                                }
-                            },
-                            {
-                                "match":{
-                                    "team_0":{
-                                        "query":match['team_0'],
-                                        "operator" : "AND"
-                                    }
-                                }
-                            },
-                            {
-                                "match":{
-                                    "team_1":{
-                                        "query":match['team_1'],
-                                        "operator" : "AND"
-                                    }
-                                }
-                            },
-                            {
-                                "match":{
-                                    "time":match['time']
-                                }
-                            },
-                            {
-                                "match":{
-                                    "domain":match['domain']
-                                }
-                            }
-                        ]
-                    }
-                }            
-            }
-            result =  es.search(index=es_index, body=query)
-            if result['hits']['total']['value'] == 0:
-                logging.info(f"insert match:{match}")
-                es.index(index=es_index, body=match)
+            logging.warning(f"insert match id:{id_match}")
+            es.index(index=es_index, body=match)
     return check_update
 
 
@@ -178,23 +175,18 @@ def update_bxh_ES(es, es_index, list_data):
         result =  es.search(index=es_index, body=query_find)
         if result['hits']['total']['value'] == 1:
             del team['create_date']
-            team['last_update'] = datetime.datetime.now()
-            id_match = result['hits']['hits'][0]['_id']
+            id_team = result['hits']['hits'][0]['_id']
             query_update = {
                 "doc":team
             }
-            response = es.update(index=es_index, id=id_match, body=query_update)
+            response = es.update(index=es_index, id=id_team, body=query_update)
             if response['result'] == "updated":
-                logging.info(f"update bxh ok, search after update:{team}")
+                logging.warning(f"update bxh ok, id team: {id_team}")
                 check_update = True
-                break
         else:
-            logging.info(f"insert match:{team}")
+            logging.warning(f"insert team id:{id_team}")
             es.index(index=es_index, body=team)
     return check_update
-
-
-
 
 # es = connect_ES()
 # query = {
@@ -235,3 +227,34 @@ def update_bxh_ES(es, es_index, list_data):
 # for match in result:
 #     local_es.index(index="worldcup", body=match['_source'])
 # # print(len(result))
+# es = connect_ES()
+# query = {
+#     "size": 2,
+#     "sort": [
+#         {
+#             "create_date": {
+#                 "order": "desc"
+#             }
+#         }
+#     ],
+#     "query": {
+#         "bool": {
+#           "must": [
+#             {
+#               "match": {
+#                 "type": 2
+#               }
+#             },
+#             {
+#               "range": {
+#                   "time":{
+#                       "gte": "2022-11-20T13:07:00"
+#                   }
+#               }
+#             }
+#           ]
+#         }
+#     }
+# }
+# result = es.search(index="worldcup", body=query)['hits']['hits']
+# print(result)
