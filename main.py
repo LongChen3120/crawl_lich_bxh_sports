@@ -101,7 +101,7 @@ def crawl_handler(time_match, index_es):
 
 def read_config():
     queue_config = queue.Queue()
-    World_cup_2022, config = query.connect_DB_local()
+    World_cup_2022, config = query.connect_DB_aHuy()
     list_config = config.find({})
     for league in list_config:
         for config_lich in league['lich_thi_dau']:
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     logging.basicConfig(filename='.\log\log_main.log', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.WARNING)
     logging.warning("\n\n_____________________________new_log_____________________________")
 
-    index_es = "worldcup_1"
+    index_es = "worldcup"
     time_now = datetime.datetime.now()
     # time_run, time_match = detect_time_run(index_es, time_now)
     scheduler_run("time_run", "time_match", index_es)
