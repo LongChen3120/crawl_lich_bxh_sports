@@ -1,5 +1,6 @@
 import crawl_lich_bxh, query
 import json
+import os
 import logging
 import datetime, time
 import queue
@@ -22,7 +23,7 @@ class My_thread(threading.Thread):
 def scheduler_update(config, index_es):
 
     es = query.connect_ES()
-    time_check_update = 121
+    time_check_update = 480
     count = 0
     while time_check_update > 0:
         count += 1
@@ -33,7 +34,7 @@ def scheduler_update(config, index_es):
             break
         else:
             logging.warning(f"Not found update !__ config type: {config['type']}, domain: {config['domain']}")
-            break
+            # break
             if time_check_update > 120:
                 time.sleep(3 * 60)
                 time_check_update -= 3
@@ -82,21 +83,21 @@ def detect_time_run(index_es, time_now):
 def crawl_handler(time_match, index_es):
     queue_config = read_config()
     list_thread = []
-    while queue_config.empty() == False:
-        config = queue_config.get()
-        scheduler_update(config, index_es)
     # while queue_config.empty() == False:
     #     config = queue_config.get()
-    #     thread = My_thread(config, index_es)
-    #     thread.daemon
-    #     thread.start()
-    #     list_thread.append(thread)
+    #     scheduler_update(config, index_es)
+    while queue_config.empty() == False:
+        config = queue_config.get()
+        thread = My_thread(config, index_es)
+        thread.daemon
+        thread.start()
+        list_thread.append(thread)
 
-    # for thread in list_thread:
-    #     thread.join()
+    for thread in list_thread:
+        thread.join()
     
-    # time_run, time_match = detect_time_run(index_es, time_match)
-    # scheduler_run(time_run, time_match, index_es)
+    time_run, time_match = detect_time_run(index_es, time_match)
+    scheduler_run(time_run, time_match, index_es)
 
 
 def read_config():
@@ -114,28 +115,30 @@ def read_config():
 def scheduler_run(time_run, time_match, index_es):
     scheduler = BackgroundScheduler()
     scheduler.start()
-    crawl_handler(time_match, index_es)
-    # trigger = CronTrigger(
-    #     year="*", month="*", day="*", hour=time_run.hour, minute=time_run.minute, second=time_run.second
-    # )
-    # scheduler.add_job(
-    #     crawl_handler,
-    #     trigger=trigger,
-    #     args=[time_match, index_es]
-    # )
-    # while True:
-    #     time.sleep(1)
+    # crawl_handler(time_match, index_es)
+    trigger = CronTrigger(
+        year="*", month="*", day="*", hour=time_run.hour, minute=time_run.minute, second=time_run.second
+    )
+    scheduler.add_job(
+        crawl_handler,
+        trigger=trigger,
+        args=[time_match, index_es]
+    )
+    while True:
+        time.sleep(1)
 
 
 if __name__ == '__main__':
     start_time = time.time()
+    with open('.\log\pid.txt', 'w', encoding='utf-8') as wf:
+        wf.write(str(os.getpid()) + "\n")
 
     logging.basicConfig(filename='.\log\log_main.log', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.WARNING)
     logging.warning("\n\n_____________________________new_log_____________________________")
 
     index_es = "worldcup_1"
     time_now = datetime.datetime.now()
-    # time_run, time_match = detect_time_run(index_es, time_now)
-    scheduler_run("time_run", "time_match", index_es)
+    time_run, time_match = detect_time_run(index_es, time_now)
+    scheduler_run(time_run, time_match, index_es)
     
     print("done ! \ntime: ",(time.time() - start_time)) 
