@@ -4,58 +4,79 @@
         "lich_thi_dau":[
             {
                 "topic":"World cup 2022",
+                "domain": "https://www.24h.com.vn/",
                 "type":2,
                 "url":"https://www.24h.com.vn/vck-world-cup-2022/ket-qua-thi-dau-bong-da-world-cup-2022-c860a1369011.html",
+                "time_match":120,
                 "type_crawl":1,
+                "type_response": 1,
                 "publish_date":{
-                    "type_result":5,
-                    "xpath":"//time[contains(@class, 'cre-post')]",
+                    "type_result":2,
+                    "type_find":2,
+                    "type_output":6,
+                    "xpath":"//time[contains(@class, 'cre-post')]/text()",
                     "re":"(\\d+\\S+\\s+\\d+\\S+)",
                     "time_format":"days/months/years hours:minutes"
                 },
                 "table":{
-                    "type_result":0,
+                    "type_result":1,
+                    "type_find":1,
+                    "type_output":1,
                     "xpath":"//article[contains(@class, 'wc22')]",
                     "round":{
-                        "type_result":1,
-                        "xpath":".//*[@class = 'tuht_show']"
+                        "type_result":2,
+                        "type_find":1,
+                        "type_output":4,
+                        "xpath":".//*[@class = 'tuht_show']//text()"
                     },
                     "row":{
-                        "type_result":0,
+                        "type_result":1,
+                        "type_find":1,
+                        "type_output":1,
                         "xpath":".//*[contains(@class, 'box-items')]"
                     },
                     "column":{
                         "score_team":{
-                                "type_result":4,
-                                "xpath": ".//*[@class = 'box-score']/child::*/text()"
+                                "type_result":2,
+                                "type_find":2,
+                                "type_output":3,
+                                "xpath": ".//*[@class = 'box-score']/child::*/text()",
+                                "re":"(\\d+)"
                             },
                         "group":{
-                            "type_result":1,
-                            "xpath":".//*[contains(@class, 'box-table')]"
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":4,
+                            "xpath":".//*[contains(@class, 'box-table')]/text()"
                             },
                         "time":{
-                            "type_result":5,
-                            "xpath":".//*[@class = 'box-time']",
+                            "type_result":2,
+                            "type_find":2,
+                            "type_output":6,
+                            "xpath":".//*[@class = 'box-time']//text()",
+                            "re":"(\\d+\\S+\\s+\\d+\\S+)",
                             "time_format":"days/months hours:minutes",
                             "replace":"years=2022"
                             },
                         "team":{
                             "type_result":2,
+                            "type_find":1,
+                            "type_output":2,
                             "xpath":".//*[contains(@class , 'team-name')]/text()"
                             }
                     }
                 },
                 "data_sample":{
-                    "topic": "lich_thi_dau",
-                    "type": "lich_thi_dau",
+                    "topic": "web",
+                    "type": "web",
                     "create_date": "",
-                    "publish_date": "lich_thi_dau",
+                    "publish_date": "web",
                     "round": "table",
-                    "score_team": "column",
-                    "group": "column",
-                    "time": "column",
-                    "team": "column",
-                    "url": "lich_thi_dau",
+                    "score_team": "row",
+                    "group": "row",
+                    "time": "row",
+                    "team": "row",
+                    "url": "web",
                     "keyword": [
                         "topic",
                         "Lịch thi đấu World Cup 2022",
@@ -65,7 +86,159 @@
                         "team_1"
                     ],
                     "keyword_unsign": "",
-                    "domain": "https://www.24h.com.vn/",
+                    "domain": "web",
+                    "thread": ""
+                }
+            },
+            {
+                "topic":"World cup 2022",
+                "domain":"https://bongda24h.vn/",
+                "type":2,
+                "url":"https://bongda24h.vn/vck-world-cup/lich-thi-dau-41.html",
+                "time_match":120,
+                "type_crawl":1,
+                "type_response": 1,
+                "publish_date":{
+                },
+                "round":{
+                },
+                "table":{
+                    "type_result":1,
+                    "type_find":1,
+                    "type_output":1,
+                    "xpath":"//*[@id = 'round45']/*[@class = 'match-football calc']",
+                    "row":{
+                        "type_result":1,
+                        "type_find":1,
+                        "type_output":1,
+                        "xpath":".//*[@class = 'f-content']"
+                    },
+                    "column":{
+                        "score_team":{
+                                "type_result":2,
+                                "type_find":2,
+                                "type_output":3,
+                                "xpath": ".//*[@class = 'soccer-scores']/text()",
+                                "re":"(\\d+)"
+                            },
+                        "group":{
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":4,
+                            "xpath":".//*[@class = 'vongbang m_hiden']/text()"
+                            },
+                        "time":{
+                            "type_result":2,
+                            "type_find":2,
+                            "type_output":6,
+                            "xpath":".//*[@class = 'time']//text() | ..//*[@class = 'title-16']/text()",
+                            "re":"(\\d+\\S+\\s+\\d+\\S+)",
+                            "time_format":"days/months/years hours:minutes"
+                            },
+                        "team":{
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":2,
+                            "xpath":".//*[contains(@class, 'name-club')]/text()"
+                            }
+                    }
+                },
+                "data_sample":{
+                    "topic": "web",
+                    "type": "web",
+                    "create_date": "",
+                    "publish_date": "",
+                    "round": "",
+                    "score_team": "row",
+                    "group": "row",
+                    "time": "row",
+                    "team": "row",
+                    "url": "web",
+                    "keyword": [
+                        "topic",
+                        "Lịch thi đấu World Cup 2022",
+                        "group",
+                        "team_0",
+                        "team_1"
+                    ],
+                    "keyword_unsign": "",
+                    "domain": "web",
+                    "thread": ""
+                }
+            },
+            {
+                "topic":"World cup 2022",
+                "domain": "https://vtc.vn/",
+                "type":2,
+                "url":"https://vtc.vn/WC/GetListMatchJson",
+                "time_match":120,
+                "type_crawl":1,
+                "type_response": 2,
+                "publish_date":{
+                    
+                },
+                "obj_json":{
+                    "round":{
+                        "key":"TypeName",
+                        "type_result":4,
+                        "type_find":1,
+                        "type_output":4
+                    },
+                    "team_0":{
+                        "key":"FirstName",
+                        "type_result":4,
+                        "type_find":1,
+                        "type_output":4
+                    },
+                    "team_1":{
+                        "key":"SecondName",
+                        "type_result":4,
+                        "type_find":1,
+                        "type_output":4
+                    },
+                    "time":{
+                        "key":"Date",
+                        "type_result":7,
+                        "type_find":2,
+                        "type_output":6,
+                        "re":"(\\d+)"
+                    },
+                    "score_team":{
+                        "key":"Score",
+                        "type_result":4,
+                        "type_find":2,
+                        "type_output":3,
+                        "re":"(\\d+)"
+                    },
+                    "group":{
+                        "key":"Description",
+                        "type_result":4,
+                        "type_find":1,
+                        "type_output":4
+                    }
+                },
+                "data_sample":{
+                    "topic": "web",
+                    "type": "web",
+                    "create_date": "",
+                    "publish_date": "",
+                    "round": "obj_json",
+                    "score_team": "obj_json",
+                    "group": "obj_json",
+                    "time": "obj_json",
+                    "team_0": "obj_json",
+                    "team_1": "obj_json",
+                    "url": "web",
+                    "keyword": [
+                        "topic",
+                        "Lịch thi đấu World Cup 2022",
+                        "round",
+                        "group",
+                        "team_0",
+                        "team_1"
+                    ],
+                    "keyword_unsign": "",
+                    "domain": "web",
                     "thread": ""
                 }
             }
@@ -73,84 +246,114 @@
         "bang_xep_hang":[
             {
                 "topic":"World cup 2022",
+                "domain": "https://www.24h.com.vn/",
                 "type":5,
                 "url":"https://www.24h.com.vn/bong-da/bang-xep-hang-bong-da-world-cup-2022-c48a1369009.html",
                 "type_crawl":1,
+                "type_response": 1,
                 "publish_date":{
-                    "type_result":5,
-                    "xpath":"//time[contains(@class, 'cre-post')]",
+                    "type_result":2,
+                    "type_find":2,
+                    "type_output":6,
+                    "xpath":"//time[contains(@class, 'cre-post')]/text()",
                     "re":"(\\d+\\S+\\s+\\d+\\S+)",
                     "time_format":"days/months/years hours:minutes"
                 },
                 "table":{
-                    "type_result":0,
+                    "type_result":1,
+                    "type_find":1,
+                    "type_output":1,
                     "xpath":"//*[contains(@class, 'wc22-bxh-bv-box')]",
                     "group":{
-                        "type_result":1,
-                        "xpath":".//*[contains(@class, 'tuht_show')]"
+                        "type_result":2,
+                        "type_find":1,
+                        "type_output":4,
+                        "xpath":".//*[contains(@class, 'tuht_show')]/text()"
                     },
                     "row":{
-                        "type_result":0,
+                        "type_result":1,
+                        "type_find":1,
+                        "type_output":1,
                         "xpath": ".//tbody/tr"
                     },
                     "column":{
                         "team":{
-                            "type_result":1,
-                            "xpath":".//td[2]"
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":4,
+                            "xpath":".//td[2]//span/text()"
                         },
                         "rank":{
-                            "type_result":3,
-                            "xpath":".//td[1]"
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[1]/text()"
                         },
                         "matches_played":{
-                            "type_result":3,
-                            "xpath":".//td[3]"
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[3]/text()"
                         },
                         "wins":{
-                            "type_result":3,
-                            "xpath":".//td[4]"
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[4]/text()"
                         },
                         "draws":{
-                            "type_result":3,
-                            "xpath":".//td[5]"
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[5]/text()"
                         },
                         "losses":{
-                            "type_result":3,
-                            "xpath":".//td[6]"
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[6]/text()"
                         },
                         "goals":{
-                            "type_result":3,
-                            "xpath":".//td[7]"
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[7]/text()"
                         },
                         "goals_conceded":{
-                            "type_result":3,
-                            "xpath":".//td[8]"
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[8]/text()"
                         },
                         "win_lose_difference":{
-                            "type_result":3, 
-                            "xpath":".//td[9]"
+                            "type_result":2, 
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[9]/text()"
                         },
                         "points":{
-                            "type_result":3,
-                            "xpath":".//td[10]"
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[10]//text()"
                         }
                     }
                 },
                 "data_sample":{
-                    "topic": "bang_xep_hang",
-                    "type": "bang_xep_hang",
+                    "topic": "web",
+                    "type": "web",
                     "group": "table",
-                    "team": "column",
-                    "rank": "column",
-                    "matches_played": "column",
-                    "wins": "column",
-                    "draws": "column",
-                    "losses": "column",
-                    "goals": "column",
-                    "goals_conceded": "column",
-                    "win_lose_difference": "column",
-                    "points": "column",
-                    "url": "bang_xep_hang",
+                    "team": "row",
+                    "rank": "row",
+                    "matches_played": "row",
+                    "wins": "row",
+                    "draws": "row",
+                    "losses": "row",
+                    "goals": "row",
+                    "goals_conceded": "row",
+                    "win_lose_difference": "row",
+                    "points": "row",
+                    "url": "web",
                     "keyword": [
                         "topic",
                         "Bảng xếp hạng world cup 2022",
@@ -159,8 +362,181 @@
                     ],
                     "keyword_unsign": "",
                     "create_date": "",
-                    "publish_date": "bang_xep_hang",
-                    "domain": "https://www.24h.com.vn/",
+                    "publish_date": "web",
+                    "domain": "web",
+                    "thread": ""
+                }
+            },
+            {
+                "topic":"World cup 2022",
+                "domain": "https://bongda24h.vn/",
+                "type":5,
+                "url":"https://bongda24h.vn/vck-world-cup/bang-xep-hang-41.html",
+                "type_crawl":1,
+                "type_response": 1,
+                "publish_date":{
+                },
+                "table":{
+                    "type_result":1,
+                    "type_find":1,
+                    "type_output":1,
+                    "xpath":"//*[@class = 'row table-scrol-x']",
+                    "group":{
+                        "type_result":2,
+                        "type_find":1,
+                        "type_output":4,
+                        "xpath":".//*[contains(@class, 'w-bang-doi')]/text()"
+                    },
+                    "row":{
+                        "type_result":1,
+                        "type_find":1,
+                        "type_output":1,
+                        "xpath": ".//tbody/tr"
+                    },
+                    "column":{
+                        "team":{
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":4,
+                            "xpath":".//*[@class = 'text-link-club']/text()"
+                        },
+                        "rank":{
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//*[contains(@class, 'td-bang-doi')]/text()"
+                        },
+                        "matches_played":{
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[3]/text()"
+                        },
+                        "wins":{
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[4]/text()"
+                        },
+                        "draws":{
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[5]/text()"
+                        },
+                        "losses":{
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[6]/text()"
+                        },
+                        "goals":{
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[7]/text()"
+                        },
+                        "win_lose_difference":{
+                            "type_result":2, 
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[8]/text()"
+                        },
+                        "points":{
+                            "type_result":2,
+                            "type_find":1,
+                            "type_output":5,
+                            "xpath":".//td[9]/text()"
+                        }
+                    }
+                },
+                "data_sample":{
+                    "topic": "web",
+                    "type": "web",
+                    "group": "table",
+                    "team": "row",
+                    "rank": "row",
+                    "matches_played": "row",
+                    "wins": "row",
+                    "draws": "row",
+                    "losses": "row",
+                    "goals": "row",
+                    "win_lose_difference": "row",
+                    "points": "row",
+                    "url": "web",
+                    "keyword": [
+                        "topic",
+                        "Bảng xếp hạng world cup 2022",
+                        "group",
+                        "team"
+                    ],
+                    "keyword_unsign": "",
+                    "create_date": "",
+                    "publish_date": "",
+                    "domain": "web",
+                    "thread": ""
+                }
+            },
+            {
+                "topic":"World cup 2022",
+                "domain": "https://vtc.vn/",
+                "type":5,
+                "url":"https://vtc.vn/WC/GetListTeamJson",
+                "type_crawl":1,
+                "type_response": 2,
+                "publish_date":{
+                },
+                "obj_json":{
+                    "team":{
+                        "key":"Name",
+                        "type_result":4,
+                        "type_find":1,
+                        "type_output":4
+                    },
+                    "group":{
+                        "key":"Group",
+                        "type_result":4,
+                        "type_find":1,
+                        "type_output":4
+                    },
+                    "points":{
+                        "key":"Point",
+                        "type_result":5,
+                        "type_find":1,
+                        "type_output":5
+                    },
+                    "matches_played":{
+                        "key": "Played",
+                        "type_result":5,
+                        "type_find":1,
+                        "type_output":5
+                    },
+                    "win_lose_difference":{
+                        "key": "GoalDifference",
+                        "type_result":5,
+                        "type_find":1,
+                        "type_output":5
+                    }
+                },
+                "data_sample":{
+                    "topic": "web",
+                    "type": "web",
+                    "group": "obj_json",
+                    "team": "obj_json",
+                    "matches_played": "obj_json",
+                    "win_lose_difference": "obj_json",
+                    "points": "obj_json",
+                    "url": "web",
+                    "keyword": [
+                        "topic",
+                        "Bảng xếp hạng world cup 2022",
+                        "group",
+                        "team"
+                    ],
+                    "keyword_unsign": "",
+                    "create_date": "",
+                    "publish_date": "",
+                    "domain": "web",
                     "thread": ""
                 }
             }

@@ -3,6 +3,7 @@ import json
 import re
 import datetime
 import query, utils
+import logging
 from bs4 import BeautifulSoup
 from lxml import html
 from selenium import webdriver
@@ -10,28 +11,83 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 # use config_v3
-with open('config_v3.json', 'r', encoding='utf-8') as read_config:
-    data_config = json.load(read_config)
+# with open('config_v3.json', 'r', encoding='utf-8') as read_config:
+#     data_config = json.load(read_config)
 
-def crawl_table(config):
+
+def detect_type_response(config):
+    response = detect_type_crawl(config, config['url'])
+    if config['type_response'] == 1:
+        response = html.fromstring(response.text, 'lxml')
+        list_data = parse_html(response, config)
+    elif config['type_response'] == 2:
+        list_data = parse_json(response.json(), config)
+    return list_data
+
+
+
+def parse_html(response, config):
+    return crawl_table(response, config)
+
+
+def parse_json(response, config):
+    list_data = []
+    for obj in response:
+        data_sample = config['data_sample'].copy()
+        new_obj = get_all_key_json(obj, {})
+        for key, vals in config['data_sample'].items():
+            if vals == "obj_json":
+                obj_config = config['obj_json'][key]
+                data = new_obj[obj_config['key']]
+                data = detect_type_result(data, obj_config)
+            elif vals == "web":
+                data = detect_type_result(response, config[key])
+            else:
+                data = detect_key(key, vals, data_sample, data_sample['keyword'])
+                data_sample[key] = data
+                continue
+
+            if type(data) == list:
+                    del data_sample[key]
+                    for i in range(len(data)):
+                        data_sample[key + "_" + str(i)] = data[i]
+            else:
+                data_sample[key] = data
+        list_data.append(data_sample)
+    return list_data
+
+
+def get_all_key_json(obj, new_obj):
+    for key, vals in obj.items():
+        if isinstance(vals, str):
+            new_obj[key] = vals
+        elif isinstance(vals, int):
+            new_obj[key] = vals
+        elif isinstance(vals, dict):
+            get_all_key_json(vals, new_obj)
+        elif isinstance(vals, list):
+            for k, v in vals.items():
+                get_all_key_json(v, new_obj)
+        else:
+            new_obj[key] = ""
+    return new_obj
+
+
+def crawl_table(browser, config):
     lich_thi_dau = []
     url = config['url']
-    browser = detect_type_crawl(config, url)
-    # with open('D:\congTacVienVCC\crawl_sports\lich.html', 'r', encoding='utf-8') as read_html:
-    #     browser = read_html.read()
-    #     browser = html.fromstring(browser, 'lxml')
-    list_table = detect_type_result(browser, config['table'])
+    list_table = detect_type_result(browser.xpath(config['table']['xpath']), config['table'])
     for table in list_table:
-        list_row_table = detect_type_result(table, config['table']['row'])
+        list_row_table = detect_type_result(table.xpath(config['table']['row']['xpath']), config['table']['row'])
         for row in list_row_table:
             data_sample = config['data_sample'].copy()
             for key, val in config['data_sample'].items():
-                if val == "lich_thi_dau" or val == "bang_xep_hang":
-                    data = detect_type_result(browser, config[key])
+                if val == "web":
+                    data = detect_type_result(html_find_xpath(browser, config[key]), config[key])
                 elif val == "table":
-                    data = detect_type_result(table, config['table'][key])
-                elif val == "column":
-                    data = detect_type_result(row, config['table']['column'][key])
+                    data = detect_type_result(html_find_xpath(table, config['table'][key]), config['table'][key])
+                elif val == "row":
+                    data = detect_type_result(html_find_xpath(row, config['table']['column'][key]), config['table']['column'][key])
                 else:
                     data = detect_key(key, val, data_sample, data_sample['keyword'])
                     data_sample[key] = data
@@ -47,11 +103,17 @@ def crawl_table(config):
     return lich_thi_dau
 
 
+def html_find_xpath(browser, config):
+    try:
+        return browser.xpath(config['xpath'])
+    except:
+        return ""
+
+
 def detect_type_crawl(data_config, url):
     if data_config['type_crawl'] == 1:
         response = requests.get(url)
-        browser = html.fromstring(response.text, 'lxml')
-        return browser
+        return response
     elif data_config['type_crawl'] == 2:
         options = Options()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -76,83 +138,175 @@ def detect_key(key, vals, data_sample, list_key):
     elif key == "keyword_unsign":
         list_key_unsign = []
         for key in list_key:
-            list_key_unsign.append(utils.unicode_to_kodauvagach(key))
+            try:
+                list_key_unsign.append(utils.unicode_to_kodauvagach(key))
+            except:
+                logging.warning(data_sample)
         return list_key_unsign
     else:
-        return vals
+        return None
 
-def detect_level(field):
-    if field['level'] == 1:
-        pass
-    elif field['level'] == 2:
-        pass
-    elif field['level'] == 3:
-        pass
 
-def detect_type_result(browser, config):
+def detect_type_result(result, config):
     try:
-        if config['type_result'] == 0:
-            list_box_match = browser.xpath(config['xpath'])
-            return list_box_match
-        elif config['type_result'] == 1:
-            round_name = browser.xpath(config['xpath'])[0]
-            round_name = round_name.text_content().strip()
-            return re.sub('\s+', ' ', round_name)
-        elif config['type_result'] == 2:
-            round_name = browser.xpath(config['xpath'])
-            return round_name
-        elif config['type_result'] == 3:
-            round_name = browser.xpath(config['xpath'])[0]
-            round_name = round_name.text_content().strip()
-            return int(re.sub('\s+', ' ', round_name))
-        elif config['type_result'] == 4:
-            round_name = browser.xpath(config['xpath'])
-            try:
-                list_result = [int(i.strip()) for i in round_name]
-            except:
-                list_result = [i.strip() for i in round_name]
-            return list_result
-        elif config['type_result'] == 5:
-            round_name = browser.xpath(config['xpath'])[0]
-            round_name = round_name.text_content().strip()
-            time = detect_time_format(re.sub('\s+', ' ', round_name), config)
-            return time
-    except: 
+        type_result = config['type_result'] 
+        if type_result == 1:
+            return elements_to_output(result, config)
+        elif type_result == 2:
+            return list_string_to_output(result, config)
+        elif type_result == 3:
+            return list_int_to_output(result, config)
+        elif type_result == 4:
+            return string_to_output(result, config)
+        elif type_result == 5:
+            return int_to_output(result, config)
+        elif type_result == 6:
+            return datetime_to_output(result, config)
+        elif type_result == 7:
+            return timestamp_to_output(result, config)
+    except:
         return config
 
+
+def elements_to_output(obj, config):
+    if config['type_output'] == 1: 
+        return obj
+    elif config['type_output'] == 2:
+        pass
+    elif config['type_output'] == 3:
+        pass
+    elif config['type_output'] == 4:
+        pass
+    elif config['type_output'] == 5:
+        pass
+    elif config['type_output'] == 6:
+        pass
+    pass
+
+
+def list_string_to_output(obj, config):
+    if config['type_output'] == 2:
+        result = detect_type_find(obj, config)
+        return [i.strip() for i in result if len(i.strip()) > 0]
+    elif config['type_output'] == 3:
+        list_numb = detect_type_find(remove_space("".join(obj)).strip(), config)
+        return [int(i) for i in list_numb]
+    elif config['type_output'] == 4:
+        string = detect_type_find(remove_space("".join(obj)).strip(), config)
+        return string
+    elif config['type_output'] == 5:
+        numb = detect_type_find(remove_space("".join(obj)).strip(), config)
+        return int(numb)
+    elif config['type_output'] == 6:
+        time = detect_type_find(remove_space("".join(obj)).strip(), config)
+        return detect_time_format(time, config)
+
+
+def list_int_to_output(obj, config):
+    pass
+
+
+def string_to_output(obj, config):
+    if config['type_output'] == 3:
+        obj = detect_type_find(remove_space("".join(obj).strip()), config)
+        return [int(i) for i in obj]
+    elif config['type_output'] == 4:
+        obj = detect_type_find(remove_space("".join(obj)).strip(), config)
+        return obj
+    elif config['type_output'] == 5:
+        obj = detect_type_find(remove_space("".join(obj)).strip(), config)
+        return int(obj)
+    elif config['type_output'] == 2:
+        pass
+    elif config['type_output'] == 6:
+        pass
+
+
+def int_to_output(obj, config):
+    if config['type_output'] == 5:
+        return obj
+    elif config['type_output'] == 2:
+        pass
+    elif config['type_output'] == 3:
+        pass
+    elif config['type_output'] == 4:
+        pass
+    elif config['type_output'] == 6:
+        pass
+
+
+def datetime_to_output(obj, config):
+    pass
+
+
+def timestamp_to_output(obj, config):
+    if config['type_output'] == 6:
+        obj = detect_type_find(obj, config)[0]
+        obj = datetime.datetime.fromtimestamp(int(obj)/1000)
+        return obj
+    elif config['type_output'] == 3:
+        pass
+    elif config['type_output'] == 4:
+        pass
+    elif config['type_output'] == 5:
+        pass
+    elif config['type_output'] == 2:
+        pass
+
+
+def detect_type_find(obj, config):
+    if config['type_find'] == 1: # giữ nguyên obj
+        return obj
+    elif config['type_find'] == 2: # tìm theo regex
+        return regex_extract(obj, config)
+
+
+def regex_extract(obj, config):
+    regex = config['re']
+    result = re.findall(regex, obj)
+    return result
+
+
 def detect_time_format(time, config):
+    if type(time) == list:
+        time = time[0]
+    time_format = config['time_format'].replace("days","%d").replace("months","%m").replace("years","%Y").replace("hours","%H").replace("minutes","%M").replace("seconds","%S")
+    time = datetime.datetime.strptime(time, time_format)
     try:
-        try:
-            time = re.findall(config['re'], time)[0]
-        except:
-            pass
-        time_format = config['time_format'].replace("days","%d").replace("months","%m").replace("years","%Y").replace("hours","%H").replace("minutes","%M").replace("seconds","%S")
-        time = datetime.datetime.strptime(time, time_format)
-        try:
-            params = config['replace'].split('=')
-            if params[0] == "years":
-                time = time.replace(year=int(params[1]))
-            elif params[0] == "months":
-                time = time.replace(month=int(params[1]))
-            elif params[0] == "days":
-                time = time.replace(day=int(params[1]))
-            elif params[0] == "hours":
-                time = time.replace(hour=int(params[1]))
-        except:
-            pass
+        params = config['replace'].split('=')
+        if params[0] == "years":
+            time = time.replace(year=int(params[1]))
+        elif params[0] == "months":
+            time = time.replace(month=int(params[1]))
+        elif params[0] == "days":
+            time = time.replace(day=int(params[1]))
+        elif params[0] == "hours":
+            time = time.replace(hour=int(params[1]))
     except:
         pass
     return time
 
 
+def remove_space(string):
+    return re.sub('\s+', ' ', string)
+
+
 def main(type, es, index_es, config):
-    list_data = crawl_table(config)
+    list_data = detect_type_response(config)
     if type == 2:
         check_update = query.update_lich_ES(es, index_es, list_data)
     elif type == 5:
         check_update = query.update_bxh_ES(es, index_es, list_data)
     return check_update
 
+# def main(config):
+#     list_data = detect_type_response(config)
+#     print(list_data)
+
+# with open('config_test.json', 'r', encoding='utf-8') as read_config:
+#     data_config = json.load(read_config)
+
+# main(data_config[0]['bang_xep_hang'][0])
 
 # wc, col_config = query.connect_DB_aHuy()
 # list_config = col_config.find({})

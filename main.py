@@ -20,18 +20,20 @@ class My_thread(threading.Thread):
 
 
 def scheduler_update(config, index_es):
-    logging.warning(f"thread {threading.Thread.name} got config type:{config['type']}")
+
     es = query.connect_ES()
     time_check_update = 121
     count = 0
     while time_check_update > 0:
         count += 1
-        logging.warning(f"_{count}_, config type:{config['type']}")
+        logging.warning(f"_count_{count}: thread {threading.Thread.name} got config type:{config['type']}, domain: {config['domain']}")
         check_update = crawl_lich_bxh.main(config['type'], es, index_es, config)
         if check_update == True:
+            logging.warning(f"update ok__ config type: {config['type']}, domain: {config['domain']}")
             break
         else:
-            logging.warning(f"Not found update !")
+            logging.warning(f"Not found update !__ config type: {config['type']}, domain: {config['domain']}")
+            break
             if time_check_update > 120:
                 time.sleep(3 * 60)
                 time_check_update -= 3
@@ -40,9 +42,8 @@ def scheduler_update(config, index_es):
                 time_check_update -= 30
 
 
-def detect_time_run(index_es):
+def detect_time_run(index_es, time_now):
     es = query.connect_ES()
-    time_now = datetime.datetime.now()
     query_search = {
         "size": 1, 
         "sort": [
@@ -63,7 +64,7 @@ def detect_time_run(index_es):
                     {
                         "range": {
                             "time":{
-                                "gte": time_now
+                                "gt": time_now
                             }
                         }
                     }
@@ -72,30 +73,30 @@ def detect_time_run(index_es):
         }
     }
     result = es.search(index=index_es, body=query_search)
-    time = datetime.datetime.strptime(result['hits']['hits'][0]['_source']['time'], "%Y-%m-%dT%H:%M:%S")
-    time_run = time + datetime.timedelta(minutes=120)
-    logging.warning(f"next run at:{time_run}")
-    return time_run
+    time_match = datetime.datetime.strptime(result['hits']['hits'][0]['_source']['time'], "%Y-%m-%dT%H:%M:%S")
+    time_run = time_match + datetime.timedelta(minutes=120)
+    logging.warning(f"next run at:{time_run}, update match id: {result['hits']['hits'][0]['_id']}")
+    return time_run, time_match
 
 
-def crawl_handler(index_es):
+def crawl_handler(time_match, index_es):
     queue_config = read_config()
     list_thread = []
-    # while queue_config.empty() == False:
-    #     config = queue_config.get()
-    #     scheduler_update(config, index_es)
     while queue_config.empty() == False:
         config = queue_config.get()
-        thread = My_thread(config, index_es)
-        thread.daemon
-        thread.start()
-        list_thread.append(thread)
+        scheduler_update(config, index_es)
+    # while queue_config.empty() == False:
+    #     config = queue_config.get()
+    #     thread = My_thread(config, index_es)
+    #     thread.daemon
+    #     thread.start()
+    #     list_thread.append(thread)
 
-    for thread in list_thread:
-        thread.join()
+    # for thread in list_thread:
+    #     thread.join()
     
-    time_next_run = detect_time_run(index_es)
-    scheduler_run(time_next_run, index_es)
+    # time_run, time_match = detect_time_run(index_es, time_match)
+    # scheduler_run(time_run, time_match, index_es)
 
 
 def read_config():
@@ -110,20 +111,20 @@ def read_config():
     return queue_config
 
 
-def scheduler_run(time_run, index_es):
+def scheduler_run(time_run, time_match, index_es):
     scheduler = BackgroundScheduler()
     scheduler.start()
-
-    trigger = CronTrigger(
-        year="*", month="*", day="*", hour=time_run.hour, minute=time_run.minute, second=time_run.second
-    )
-    scheduler.add_job(
-        crawl_handler,
-        trigger=trigger,
-        args=[index_es]
-    )
-    while True:
-        time.sleep(1)
+    crawl_handler(time_match, index_es)
+    # trigger = CronTrigger(
+    #     year="*", month="*", day="*", hour=time_run.hour, minute=time_run.minute, second=time_run.second
+    # )
+    # scheduler.add_job(
+    #     crawl_handler,
+    #     trigger=trigger,
+    #     args=[time_match, index_es]
+    # )
+    # while True:
+    #     time.sleep(1)
 
 
 if __name__ == '__main__':
@@ -132,8 +133,9 @@ if __name__ == '__main__':
     logging.basicConfig(filename='.\log\log_main.log', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.WARNING)
     logging.warning("\n\n_____________________________new_log_____________________________")
 
-    index_es = "worldcup"
-    next_start = detect_time_run(index_es)
-    scheduler_run(next_start, index_es)
+    index_es = "worldcup_1"
+    time_now = datetime.datetime.now()
+    # time_run, time_match = detect_time_run(index_es, time_now)
+    scheduler_run("time_run", "time_match", index_es)
     
     print("done ! \ntime: ",(time.time() - start_time)) 

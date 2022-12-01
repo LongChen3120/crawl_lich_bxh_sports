@@ -3,17 +3,34 @@ __________________________ config __________________________
 + 1: request
 + 2: selenium
 
-## type find:
-+ 1: find xpath
-+ 2: find xpath + regex
+## type response web:
++ 1: html
++ 2: json
 
 ## type result:
-+ 0: list element
-+ 1: string
++ 1: list elements
 + 2: list string
-+ 3: int
-+ 4: list int
-+ 5: date time
++ 3: list int
++ 4: string
++ 5: int
++ 6: datetime
++ 7: timestamp
+<!-- + 3: list string -->
+
+
+## type find:
++ 1: find by xpath
++ 2: find by xpath + regex
+
+
+## type output:
++ 1: list elements
++ 2: list string
++ 3: list int
++ 4: string
++ 5: int
++ 6: datetime: %d/%m/%Y %H:%M
+
 
 ## type action:
 + 1: click

@@ -2,7 +2,6 @@ import pymongo
 from elasticsearch import Elasticsearch
 import json
 import datetime
-import logging
 
 # _________________ MongoDB _________________
 # local mongodb://localhost:27017
@@ -48,7 +47,7 @@ def update_bxh_DB(col, list_data):
 
 
 # def update_config():
-#     wc22, col_config =connect_DB_aHuy()
+#     wc22, col_config =connect_DB_local()
 #     with open('config_v3.json', 'r', encoding='utf-8') as read_config:
 #         data_config = json.load(read_config)
 #     for config in data_config:
@@ -69,9 +68,14 @@ def update_bxh_DB(col, list_data):
 # a hoat: http://192.168.19.77:9200/
 # server: http://10.3.11.253:3008
 def connect_ES():
-    es = Elasticsearch(hosts="http://192.168.19.77:9200/")
+    es = Elasticsearch(hosts="http://127.0.0.1:9200/")
     return es
 
+local_es = Elasticsearch(hosts="http://127.0.0.1:9200/")
+try:
+    local_es.indices.create(index="worldcup_1")
+except:
+    pass
 
 def insert_ES(es, es_index, list_data):
     for match in list_data:
@@ -113,7 +117,10 @@ def update_lich_ES(es, es_index, list_data):
                         },
                         {
                             "match":{
-                                "domain":match['domain']
+                                "domain":{
+                                    "query":match['domain'],
+                                    "operator": "AND"
+                                }
                             }
                         }
                     ]
@@ -121,7 +128,7 @@ def update_lich_ES(es, es_index, list_data):
             }            
         }
         result =  es.search(index=es_index, body=query)
-        if result['hits']['total']['value'] == 1:
+        if result['hits']['total']['value'] >= 1:
             del match['create_date']
             id_match = result['hits']['hits'][0]['_id']
             query_update = {
@@ -129,10 +136,11 @@ def update_lich_ES(es, es_index, list_data):
             }
             response = es.update(index=es_index, id=id_match, body=query_update)
             if response['result'] == "updated":
-                logging.warning(f"update lich ok, id:{id_match}")
+                # logging.warning(f"update lich ok, id:{id_match}")
                 check_update = True
         else:
-            logging.warning(f"insert match id:{id_match}")
+            # logging.warning(f"insert match id:{id_match}")
+            check_update = True
             es.index(index=es_index, body=match)
     return check_update
 
@@ -173,7 +181,7 @@ def update_bxh_ES(es, es_index, list_data):
             }            
         }
         result =  es.search(index=es_index, body=query_find)
-        if result['hits']['total']['value'] == 1:
+        if result['hits']['total']['value'] >= 1:
             del team['create_date']
             id_team = result['hits']['hits'][0]['_id']
             query_update = {
@@ -181,80 +189,15 @@ def update_bxh_ES(es, es_index, list_data):
             }
             response = es.update(index=es_index, id=id_team, body=query_update)
             if response['result'] == "updated":
-                logging.warning(f"update bxh ok, id team: {id_team}")
                 check_update = True
         else:
-            logging.warning(f"insert team id:{id_team}")
             es.index(index=es_index, body=team)
+            check_update = True
     return check_update
 
-# es = connect_ES()
-# query = {
-#     "size": 65, 
-#     "sort": [
-#         {
-#             "create_date": {
-#                 "order": "desc"
-#             }
-#         }
-#     ],
-#     "query": {
-#         "bool": {
-#           "must": [
-#             {
-#               "match": {
-#                 "type": 2
-#               }
-#             },
-#             {
-#               "range": {
-#                   "time":{
-#                       "gte": "2022-11-20T13:07:00"
-#                   }
-#               }
-#             }
-#           ]
-#         }
-#     }
-# }
-# result = es.search(index="worldcup", body=query)['hits']['hits']
 
 # local_es = Elasticsearch(hosts="http://127.0.0.1:9200/")
-# # try:
-# #     local_es.indices.create(index="worldcup")
-# # except:
-# #     pass
-# for match in result:
-#     local_es.index(index="worldcup", body=match['_source'])
-# # print(len(result))
-# es = connect_ES()
-# query = {
-#     "size": 2,
-#     "sort": [
-#         {
-#             "create_date": {
-#                 "order": "desc"
-#             }
-#         }
-#     ],
-#     "query": {
-#         "bool": {
-#           "must": [
-#             {
-#               "match": {
-#                 "type": 2
-#               }
-#             },
-#             {
-#               "range": {
-#                   "time":{
-#                       "gte": "2022-11-20T13:07:00"
-#                   }
-#               }
-#             }
-#           ]
-#         }
-#     }
-# }
-# result = es.search(index="worldcup", body=query)['hits']['hits']
-# print(result)
+# try:
+#     local_es.indices.create(index="worldcup_1")
+# except:
+#     pass
