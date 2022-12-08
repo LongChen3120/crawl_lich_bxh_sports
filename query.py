@@ -46,20 +46,20 @@ def update_bxh_DB(col, list_data):
             col.insert_one(team)
 
 
-# def update_config():
-#     wc22, col_config =connect_DB_local()
-#     with open('config_v3.json', 'r', encoding='utf-8') as read_config:
-#         data_config = json.load(read_config)
-#     for config in data_config:
-#         try:
-#             if col_config.find_one({"league":config['league']}):
-#                 mapping_site = {"league":{"$regex":f"{config['league']}"}}
-#                 update_vals = {"$set":config}
-#                 col_config.update_one(mapping_site, update_vals)
-#             else:
-#                 col_config.insert_one(config)
-#         except:
-#             print(config)
+def update_config():
+    wc22, col_config =connect_DB_aHuy()
+    with open('config_v3.json', 'r', encoding='utf-8') as read_config:
+        data_config = json.load(read_config)
+    for config in data_config:
+        try:
+            if col_config.find_one({"league":config['league']}):
+                mapping_site = {"league":{"$regex":f"{config['league']}"}}
+                update_vals = {"$set":config}
+                col_config.update_one(mapping_site, update_vals)
+            else:
+                col_config.insert_one(config)
+        except:
+            print(config)
 # update_config()
 
 # _________________ ES _________________
@@ -68,14 +68,8 @@ def update_bxh_DB(col, list_data):
 # a hoat: http://192.168.19.77:9200/
 # server: http://10.3.11.253:3008
 def connect_ES():
-    es = Elasticsearch(hosts="http://127.0.0.1:9200/")
+    es = Elasticsearch(hosts="http://192.168.19.77:9200/")
     return es
-
-local_es = Elasticsearch(hosts="http://127.0.0.1:9200/")
-try:
-    local_es.indices.create(index="worldcup_1")
-except:
-    pass
 
 def insert_ES(es, es_index, list_data):
     for match in list_data:
@@ -196,8 +190,8 @@ def update_bxh_ES(es, es_index, list_data):
     return check_update
 
 
-# local_es = Elasticsearch(hosts="http://127.0.0.1:9200/")
+# local_es = Elasticsearch(hosts="http://192.168.19.77:9200/")
 # try:
-#     local_es.indices.create(index="worldcup_1")
+#     local_es.indices.create(index="long_worldcup_test")
 # except:
 #     pass

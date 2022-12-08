@@ -94,7 +94,7 @@
                 "topic":"World cup 2022",
                 "domain":"https://bongda24h.vn/",
                 "type":2,
-                "url":"https://bongda24h.vn/vck-world-cup/lich-thi-dau-41.html",
+                "url":"https://bongda24h.vn/vck-world-cup/ket-qua-41.html",
                 "time_match":120,
                 "type_crawl":1,
                 "type_response": 1,
@@ -106,7 +106,7 @@
                     "type_result":1,
                     "type_find":1,
                     "type_output":1,
-                    "xpath":"//*[@id = 'round45']/*[@class = 'match-football calc']",
+                    "xpath":"//*[@id = 'round45' or @class = 'block-football']/*[contains(@class, 'match-football calc')]",
                     "row":{
                         "type_result":1,
                         "type_find":1,

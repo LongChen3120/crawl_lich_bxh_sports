@@ -21,7 +21,7 @@ class My_thread(threading.Thread):
 
 def scheduler_update(config, index_es):
     es = query.connect_ES()
-    time_check_update = 240
+    time_check_update = 480
     count = 0
     while time_check_update > 0:
         count += 1
@@ -33,12 +33,10 @@ def scheduler_update(config, index_es):
             break
         else:
             logging.warning(f"Not found update !__ config type: {config['type']}, domain: {config['domain']}")
-            if time_check_update > 180:
-                print(time_check_update)
+            if time_check_update > 360:
                 time.sleep(3 * 60)
                 time_check_update -= 3
             elif time_check_update > 1:
-                print(time_check_update)
                 time.sleep(30 * 60)
                 time_check_update -= 30
 
@@ -110,7 +108,7 @@ def get_time_run(time_start, time_match):
 
 def read_config():
     queue_config = queue.Queue()
-    World_cup_2022, config = query.connect_DB_local()
+    World_cup_2022, config = query.connect_DB_aHuy()
     list_config = config.find({})
     for league in list_config:
         for config_lich in league['lich_thi_dau']:
@@ -133,7 +131,10 @@ def scheduler_run(id, time_start, time_run, index_es):
     # crawl_handler(time_start, index_es)
     add_job(id, time_start, time_run, index_es)
     while True:
-        time.sleep(5)
+        try:
+            time.sleep(5)
+        except KeyboardInterrupt:
+            pass
 
 
 if __name__ == '__main__':
@@ -142,7 +143,7 @@ if __name__ == '__main__':
     logging.basicConfig(filename='.\log\log_main.log', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.WARNING)
     logging.warning("\n\n_____________________________new_log_____________________________")
 
-    index_es = "worldcup_1"
+    index_es = "worldcup"
     list_time_run = []
 
     # first run: update and insert.
@@ -159,7 +160,6 @@ if __name__ == '__main__':
     for thread in list_thread:
         thread.join()
 
-    print("insert ok")
     # run scheduler
     time_now = get_time_now()
     id, time_start, time_run = detect_time_run(index_es, time_now)

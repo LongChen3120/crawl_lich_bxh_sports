@@ -122,7 +122,8 @@ def scheduler_run(time_run, time_match, index_es):
     scheduler.add_job(
         crawl_handler,
         trigger=trigger,
-        args=[time_match, index_es]
+        args=[time_match, index_es],
+        max_instances=10
     )
     while True:
         time.sleep(1)
