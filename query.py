@@ -48,7 +48,7 @@ def update_bxh_DB(col, list_data):
 
 def update_config():
     wc22, col_config =connect_DB_aHuy()
-    with open('config_v3.json', 'r', encoding='utf-8') as read_config:
+    with open('config_test.json', 'r', encoding='utf-8') as read_config:
         data_config = json.load(read_config)
     for config in data_config:
         try:
@@ -190,8 +190,8 @@ def update_bxh_ES(es, es_index, list_data):
     return check_update
 
 
-# local_es = Elasticsearch(hosts="http://192.168.19.77:9200/")
+# local_es = Elasticsearch(hosts="http://127.0.0.1:9200/")
 # try:
-#     local_es.indices.create(index="long_worldcup_test")
+#     local_es.indices.create(index="worldcup")
 # except:
 #     pass

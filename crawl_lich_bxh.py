@@ -32,14 +32,17 @@ def parse_html(response, config):
 
 def parse_json(response, config):
     list_data = []
-    for obj in response:
+    for obj in response['data']['4265']['data']:
         data_sample = config['data_sample'].copy()
         new_obj = get_all_key_json(obj, {})
         for key, vals in config['data_sample'].items():
             if vals == "obj_json":
                 obj_config = config['obj_json'][key]
-                data = new_obj[obj_config['key']]
-                data = detect_type_result(data, obj_config)
+                try:
+                    data = new_obj[obj_config['key']]
+                    data = detect_type_result(data, obj_config)
+                except:
+                    data = ""
             elif vals == "web":
                 data = detect_type_result(response, config[key])
             else:
@@ -60,9 +63,28 @@ def parse_json(response, config):
 def get_all_key_json(obj, new_obj):
     for key, vals in obj.items():
         if isinstance(vals, str):
-            new_obj[key] = vals
+            if key in new_obj:
+                temp = []
+                if isinstance(new_obj[key], list):
+                    temp.extend(new_obj[key])
+                else:
+                    temp.append(new_obj[key])
+                temp.append(vals)
+                new_obj[key] = temp
+            else:
+                new_obj[key] = vals
+            
         elif isinstance(vals, int):
-            new_obj[key] = vals
+            if key in new_obj:
+                temp = []
+                if isinstance(new_obj[key], list):
+                    temp.extend(new_obj[key])
+                else:
+                    temp.append(new_obj[key])
+                temp.append(vals)
+                new_obj[key] = temp
+            else:
+                new_obj[key] = vals
         elif isinstance(vals, dict):
             get_all_key_json(vals, new_obj)
         elif isinstance(vals, list):
@@ -71,6 +93,45 @@ def get_all_key_json(obj, new_obj):
         else:
             new_obj[key] = ""
     return new_obj
+
+
+# obj = {
+# "away_team": {
+# "logo": "https://is.vnecdn.net/objects/teams/9.png",
+# "team_id": 9,
+# "team_name": "Tây Ban Nha",
+# "team_name_full": "Spain"
+# },
+# "elapsed": 120,
+# "event_date": "2022-12-06T22:00:00+07:00",
+# "event_timestamp": 1670338800,
+# "first_half_start": 1670338800,
+# "fixture_id": 977345,
+# "home_team": {
+# "logo": "https://is.vnecdn.net/objects/teams/31.png",
+# "team_id": 31,
+# "team_name": "Morocco",
+# "team_name_full": "Morocco"
+# },
+# "league_id": 4265,
+# "position": 60,
+# "referee": "Fernando Rapallini, Argentina",
+# "round": "Round of 16",
+# "round_int": 16,
+# "score": {
+# "extratime": "0-0",
+# "fulltime": "0-0",
+# "halftime": "0-0",
+# "penalty": "3-0"
+# },
+# "second_half_start": 1670342400,
+# "status": "Match Finished",
+# "status_short": "PEN",
+# "venue": "Education City Stadium"
+# }
+
+# print(get_all_key_json(obj, {}))
+
 
 
 def crawl_table(browser, config):
@@ -241,8 +302,12 @@ def datetime_to_output(obj, config):
 
 def timestamp_to_output(obj, config):
     if config['type_output'] == 6:
-        obj = detect_type_find(obj, config)[0]
-        obj = datetime.datetime.fromtimestamp(int(obj)/1000)
+        obj = detect_type_find(obj, config)
+        if isinstance(obj, dict):
+            obj = int(obj[0])
+        elif isinstance(obj, str):
+            obj = int(obj)
+        obj = datetime.datetime.fromtimestamp(obj)
         return obj
     elif config['type_output'] == 3:
         pass

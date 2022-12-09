@@ -1,0 +1,90 @@
+[
+    {
+        "league":"World cup 2022",
+        "lich_thi_dau":[
+            {
+                "topic":"World cup 2022",
+                "domain": "https://vnexpress.net/",
+                "type":2,
+                "url":"https://gw.vnexpress.net/football/fixture?league_id=4265",
+                "time_match":120,
+                "type_crawl":1,
+                "type_response": 2,
+                "publish_date":{
+                    
+                },
+                "obj_json":{
+                    "round":{
+                        "key":"round",
+                        "type_result":4,
+                        "type_find":1,
+                        "type_output":4
+                    },
+                    "team":{
+                        "key":"team_name",
+                        "type_result":2,
+                        "type_find":1,
+                        "type_output":2
+                    },
+                    "time":{
+                        "key":"event_timestamp",
+                        "type_result":7,
+                        "type_find":1,
+                        "type_output":6
+                    },
+                    "score_team":{
+                        "key":"fulltime",
+                        "type_result":4,
+                        "type_find":2,
+                        "type_output":3,
+                        "re":"(\\d+)"
+                    },
+                    "match_id":{
+                        "key":"fixture_id",
+                        "type_result":5,
+                        "type_find":1,
+                        "type_output":5
+                    },
+                    "venue":{
+                        "key":"venue",
+                        "type_result":4,
+                        "type_find":1,
+                        "type_output":4
+                    },
+                    "ensign_team":{
+                        "key":"logo",
+                        "type_result":2,
+                        "type_find":1,
+                        "type_output":2
+                    }
+                },
+                "data_sample":{
+                    "topic": "web",
+                    "type": "web",
+                    "create_date": "",
+                    "publish_date": "",
+                    "round": "obj_json",
+                    "match_id":"obj_json",
+                    "score_team": "obj_json",
+                    "ensign_team":"obj_json",
+                    "venue":"obj_json",
+                    "group": "",
+                    "time": "obj_json",
+                    "team": "obj_json",
+                    "url": "web",
+                    "keyword": [
+                        "topic",
+                        "Lịch thi đấu World Cup 2022",
+                        "round",
+                        "team_0",
+                        "team_1"
+                    ],
+                    "keyword_unsign": "",
+                    "domain": "web",
+                    "thread": ""
+                }
+            }
+        ],
+        "bang_xep_hang":[]
+    }
+]

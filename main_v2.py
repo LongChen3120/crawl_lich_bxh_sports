@@ -82,6 +82,7 @@ def detect_time_run(index_es, time_now):
 
 
 def call_api_set_lich_tuong_thuat(time_start, doc):
+    logging.info(doc)
     time_start_crawl = get_time_run(time_start, -30)
     time_start_crawl = datetime.datetime.strftime(time_start_crawl, "%Y-%m-%dT%H:%M:%S.%f")
     payload = setting.PAYLOAD
@@ -128,13 +129,15 @@ def get_time_run(time_start, time_match):
 
 def read_config():
     queue_config = queue.Queue()
+    # with open('config_v3.json', 'r', encoding='utf-8') as rf:
+    #     list_config = json.load(rf)
     World_cup_2022, config = query.connect_DB_aHuy()
     list_config = config.find({})
     for league in list_config:
         for config_lich in league['lich_thi_dau']:
             queue_config.put(config_lich)
-        for config_bxh in league['bang_xep_hang']:
-            queue_config.put(config_bxh)
+        # for config_bxh in league['bang_xep_hang']:
+        #     queue_config.put(config_bxh)
     return queue_config
 
 
@@ -172,6 +175,7 @@ if __name__ == '__main__':
     list_thread = []
     while queue_config.empty() == False:
         config = queue_config.get()
+        # crawl_lich_bxh.main(config['type'], es, index_es, config)
         logging.warning(f"thread {threading.Thread.name} got config type:{config['type']}, domain: {config['domain']}")
         t = threading.Thread(target=crawl_lich_bxh.main, args=(config['type'], es, index_es, config, ))
         t.daemon
@@ -181,8 +185,8 @@ if __name__ == '__main__':
         thread.join()
 
     # run scheduler
-    time_now = get_time_now()
-    id, time_start, time_run = detect_time_run(index_es, time_now)
-    scheduler_run(id, time_start, time_run, index_es)
+    # time_now = get_time_now()
+    # id, time_start, time_run = detect_time_run(index_es, time_now)
+    # scheduler_run(id, time_start, time_run, index_es)
     
     print("done ! \ntime: ",(time.time() - start_time)) 
