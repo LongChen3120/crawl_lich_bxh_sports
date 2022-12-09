@@ -1,9 +1,11 @@
 import crawl_lich_bxh, query
 import json
+import setting
 import logging
 import datetime, time
 import queue
 import threading
+import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -74,9 +76,27 @@ def detect_time_run(index_es, time_now):
     result = es.search(index=index_es, body=query_search)
     time_start = datetime.datetime.strptime(result['hits']['hits'][0]['_source']['time'], "%Y-%m-%dT%H:%M:%S")
     time_run = get_time_run(time_start, 120)
-    # list_time_run.append(time_run)
+    call_api_set_lich_tuong_thuat(time_start, result['hits']['hits'][0]['_source'])
     logging.warning(f"next run at:{time_run}, match id: {result['hits']['hits'][0]['_id']}")
     return result['hits']['hits'][0]['_id'], time_start, time_run
+
+
+def call_api_set_lich_tuong_thuat(time_start, doc):
+    time_start_crawl = get_time_run(time_start, -30)
+    time_start_crawl = datetime.datetime.strftime(time_start_crawl, "%Y-%m-%dT%H:%M:%S.%f")
+    payload = setting.PAYLOAD
+    payload['start_time'] = str(time_start_crawl)
+    payload['site'] = doc['domain']
+    payload['kwargs'] = {
+        "round": doc['round'],
+        "team_1": doc['team_0'],
+        "team_2": doc['team_1']
+    }
+    try:
+        res = requests.post(setting.API, headers=setting.HEADER, json=payload)
+        logging.warning(f"__response: {res.text}\nstart run crawl thuong thuat luc:{time_start_crawl},")
+    except:
+        logging.warning("exception: ", exc_info=True)
 
 
 def crawl_handler(time_start, index_es):
